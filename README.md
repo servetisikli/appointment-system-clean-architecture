@@ -21,7 +21,7 @@ A modern, multi-layered, and scalable appointment management API built with **.N
 
 - [.NET 9 (Web API)](https://dotnet.microsoft.com/)
 - [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
-- [Swagger / OpenAPI](https://swagger.io/tools/open-source/open-api/)
+- [Swagger / OpenAPI](https://swagger.io/)
 - [Repository Pattern](https://martinfowler.com/eaaCatalog/repository.html)
 - [SQL Server](https://www.microsoft.com/en-us/sql-server/)
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
@@ -154,6 +154,6 @@ appointment-system-clean-architecture/
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 - [Microsoft Docs: ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core)
 - [EF Core Docs](https://learn.microsoft.com/en-us/ef/core/)
-- [Swagger/OpenAPI](https://swagger.io/tools/open-source/open-api/)
+- [Swagger/OpenAPI](https://swagger.io/)
 
 ---

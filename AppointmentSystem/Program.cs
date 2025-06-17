@@ -9,8 +9,17 @@ var builder = WebApplication.CreateBuilder(args);
 // 1. Controller and OpenAPI settings
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();         
+builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 // 2. Infrastructure: Add DbContext and Repository to the DI container
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -28,6 +37,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
 

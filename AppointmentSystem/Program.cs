@@ -2,6 +2,7 @@ using AppointmentSystem.Application.Interfaces;
 using AppointmentSystem.Infrastructure.Data;
 using AppointmentSystem.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using AppointmentSystem.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();         
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
 // 2. Infrastructure: Add DbContext and Repository to the DI container
 builder.Services.AddDbContext<AppDbContext>(options =>

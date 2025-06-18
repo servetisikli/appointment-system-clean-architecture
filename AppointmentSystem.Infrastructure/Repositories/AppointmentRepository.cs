@@ -34,7 +34,14 @@ namespace AppointmentSystem.Infrastructure.Repositories
 
         public async Task UpdateAsync(Appointment appointment)
         {
-            _context.Appointments.Update(appointment);
+            var existing = await _context.Appointments.FindAsync(appointment.Id);
+            if (existing == null) return;
+
+            existing.Title = appointment.Title;
+            existing.Date = appointment.Date;
+            existing.Description = appointment.Description;
+            existing.Attendee = appointment.Attendee;
+
             await _context.SaveChangesAsync();
         }
 

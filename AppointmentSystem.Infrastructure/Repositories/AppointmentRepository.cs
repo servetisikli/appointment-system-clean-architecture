@@ -3,6 +3,7 @@ using AppointmentSystem.Domain.Entities;
 using AppointmentSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AppointmentSystem.Infrastructure.Repositories
@@ -19,20 +20,23 @@ namespace AppointmentSystem.Infrastructure.Repositories
         public async Task<List<Appointment>> GetAllAsync()
         {
             return await _context.Appointments.ToListAsync();
-        }
-
-        public async Task<Appointment> GetByIdAsync(int id)
+        }        public async Task<Appointment?> GetByIdAsync(int id)
         {
             return await _context.Appointments.FindAsync(id);
+        }
+
+        public async Task<List<Appointment>> GetByUserIdAsync(int userId)
+        {
+            return await _context.Appointments
+                .Where(a => a.UserId == userId)
+                .ToListAsync();
         }
 
         public async Task AddAsync(Appointment appointment)
         {
             _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(Appointment appointment)
+        }        public async Task UpdateAsync(Appointment appointment)
         {
             var existing = await _context.Appointments.FindAsync(appointment.Id);
             if (existing == null) return;
@@ -41,6 +45,7 @@ namespace AppointmentSystem.Infrastructure.Repositories
             existing.Date = appointment.Date;
             existing.Description = appointment.Description;
             existing.Attendee = appointment.Attendee;
+            // Don't update UserId here to prevent appointments from being reassigned
 
             await _context.SaveChangesAsync();
         }

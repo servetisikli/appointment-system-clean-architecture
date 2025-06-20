@@ -1,19 +1,19 @@
-# Appointment System - Clean Architecture
+# Appointment System - Clean Architecture with Authentication
 
-A modern, multi-layered, and scalable appointment management API built with **.NET 9**, Entity Framework Core, and Clean Architecture principles.
+A modern, multi-layered, and scalable appointment management API built with **.NET 9**, Entity Framework Core, Clean Architecture principles, and a robust authentication system with role-based permissions.
 
 ---
 
 ## 🏗️ Architecture
 
 - **API (Presentation):**  
-  Handles HTTP requests and serves Swagger documentation.
+  Handles HTTP requests, authentication, and authorization. Serves Swagger documentation.
 - **Application:**  
-  Business logic, interfaces, and service contracts.
+  Business logic, interfaces, DTOs, and service contracts.
 - **Domain:**  
-  Core business entities and rules.
+  Core business entities, value objects, and rules.
 - **Infrastructure:**  
-  Data access (EF Core, repositories), integrations.
+  Data access (EF Core, repositories), authentication services, password hashing, JWT token generation.
 
 ---
 
@@ -21,10 +21,40 @@ A modern, multi-layered, and scalable appointment management API built with **.N
 
 - [.NET 9 (Web API)](https://dotnet.microsoft.com/)
 - [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
+- [JWT Authentication](https://jwt.io/)
+- [Role-Based Authorization](https://learn.microsoft.com/en-us/aspnet/core/security/authorization/roles)
 - [Swagger / OpenAPI](https://swagger.io/)
 - [Repository Pattern](https://martinfowler.com/eaaCatalog/repository.html)
 - [SQL Server](https://www.microsoft.com/en-us/sql-server/)
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+
+---
+
+## 🔐 Authentication & Authorization
+
+This API uses JWT (JSON Web Token) based authentication with role-based authorization:
+
+### Available Roles
+- **Admin**: Full access to all features, user management
+- **Manager**: Limited administrative access
+- **User**: Access only to own appointments and basic features
+
+### Authentication Endpoints
+- **POST /api/auth/register**: Register a new user (default role: User)
+- **POST /api/auth/login**: Authenticate and receive a JWT token
+
+### User Management Endpoints (Requires Admin role)
+- **GET /api/users**: List all users
+- **GET /api/users/{id}**: Get user details
+- **PUT /api/users/{id}**: Update user details
+- **DELETE /api/users/{id}**: Delete user
+- **POST /api/users/{userId}/roles/{roleName}**: Assign role to user
+- **DELETE /api/users/{userId}/roles/{roleName}**: Remove role from user
+
+### Protected Appointment Endpoints
+- All appointment endpoints require authentication
+- Regular users can only access their own appointments
+- Admins can access all appointments
 
 ---
 

@@ -1,11 +1,13 @@
 ﻿using AppointmentSystem.Application.Interfaces;
 using AppointmentSystem.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AppointmentSystem.Controllers
-{
-    [ApiController]
+{    [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class AppointmentController : ControllerBase
     {
         private readonly IAppointmentService _appointmentService;
@@ -13,13 +15,23 @@ namespace AppointmentSystem.Controllers
         public AppointmentController(IAppointmentService appointmentService)
         {
             _appointmentService = appointmentService;
-        }
-
-        [HttpGet]
+        }        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var appointments = await _appointmentService.GetAllAsync();
-            return Ok(appointments);
+            // Admin can see all appointments
+            if (User.IsInRole("Admin"))
+            {
+                var appointments = await _appointmentService.GetAllAsync();
+                return Ok(appointments);
+            }
+            // Regular users can only see their own appointments
+            else if (int.TryParse(User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier), out int userId))
+            {
+                var appointments = await _appointmentService.GetByUserIdAsync(userId);
+                return Ok(appointments);
+            }
+            
+            return Unauthorized();
         }
 
         [HttpGet("{id}")]
@@ -29,11 +41,19 @@ namespace AppointmentSystem.Controllers
             if (appointment == null)
                 return NotFound();
             return Ok(appointment);
-        }
-
-        [HttpPost]
+        }        [HttpPost]
         public async Task<IActionResult> Create([FromBody] Appointment appointment)
         {
+            // Get the current user ID from the claims
+            if (int.TryParse(User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier), out int userId))
+            {
+                appointment.UserId = userId;
+            }
+            else
+            {
+                return Unauthorized();
+            }
+
             await _appointmentService.AddAsync(appointment);
             return CreatedAtAction(nameof(Get), new { id = appointment.Id }, appointment);
         }
